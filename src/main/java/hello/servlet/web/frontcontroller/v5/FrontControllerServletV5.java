@@ -2,8 +2,10 @@ package hello.servlet.web.frontcontroller.v5;
 import hello.servlet.web.frontcontroller.ModelView;
 import hello.servlet.web.frontcontroller.MyView;
 import hello.servlet.web.frontcontroller.v3.controller.MemberFormControllerV3;
+import hello.servlet.web.frontcontroller.v4.controller.MemberFormControllerV4;
 import hello.servlet.web.frontcontroller.v5.adapter.ControllerV3HandlerAdapter;
 
+import hello.servlet.web.frontcontroller.v5.adapter.ControllerV4HandlerAdapter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -29,15 +31,24 @@ public class FrontControllerServletV5 extends HttpServlet {
         handlerMappingMap.put("/front-controller/v5/v3/members/new-form", new MemberFormControllerV3());
         handlerMappingMap.put("/front-controller/v5/v3/members/save", new MemberFormControllerV3());
         handlerMappingMap.put("/front-controller/v5/v3/members", new MemberFormControllerV3());
+
+        //v4 추가
+        handlerMappingMap.put("/front-controller/v5/v4/members/new-form", new MemberFormControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members/save", new MemberFormControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members", new MemberFormControllerV4());
     }
 
     private void initHandlerAdapters() {
-        handlerAdapters.add(new ControllerV3HandlerAdapter());
+
+         handlerAdapters.add(new ControllerV3HandlerAdapter());
+        handlerAdapters.add(new ControllerV4HandlerAdapter());
     }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Object handler = getHandler(request);
+
+         //MemberFormControllerV4
+         Object handler = getHandler(request);
         if (handler == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
@@ -53,6 +64,7 @@ public class FrontControllerServletV5 extends HttpServlet {
         return handlerMappingMap.get(requestURI);
     }
     private MyHandlerAdapter getHandlerAdapter(Object handler) {
+         //MemberFormController
         for (MyHandlerAdapter adapter : handlerAdapters) {
             if (adapter.supports(handler)) {
                 return adapter;
